@@ -51,6 +51,43 @@ app.use(function(req, res, next) {
   next()
 });
 
+// could be rewritten, but tom skipped this in the interest of time
+async function getGroupsForUser(event) {
+  let userSub =
+    event
+      .requestContext
+      .identity
+      .cognitoAuthenticationProvider
+      .split(':CognitoSignIn:')[1]
+  let userParams = {
+    UserPoolId: userpoolId,
+    Filter: `sub = "${userSub}"`,
+  }
+  let userData = await cognito.listUsers(userParams).promise()
+  const user = userData.Users[0]
+  var groupParams = {
+    UserPoolId: userpoolId,
+    Username: user.Username
+  }
+  const groupData = await cognito.adminListGroupsForUser(groupParams).promise()
+  return groupData
+}
+
+async function canPerformAction(event, group) {
+  return new Promise(async (resolve, reject) => {
+    if (!event.requestContext.identity.cognitoAuthenticationProvider) {
+      return reject()
+    }
+    const groupData = await getGroupsForUser(event)
+    const groupsForUser = groupData.Groups.map(group => group.GroupName)
+    if (groupsForUser.includes(group)) {
+      resolve()
+    } else {
+      reject('user not in group, cannot perform action..')
+    }
+  })
+}
+
 
 /**********************
  * Example get method *
