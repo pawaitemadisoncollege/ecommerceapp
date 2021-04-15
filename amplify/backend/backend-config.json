@@ -23,5 +23,11 @@
       ],
       "customAuth": false
     }
+  },
+  "storage": {
+    "producttable": {
+      "service": "DynamoDB",
+      "providerPlugin": "awscloudformation"
+    }
   }
 }
