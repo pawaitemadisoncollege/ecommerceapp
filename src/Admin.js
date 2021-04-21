@@ -75,7 +75,7 @@ const Admin = () => {
                 Add Product
             </Button>
         </div>
-    )S
+    );
 }
 
 const containerStyle = { 
