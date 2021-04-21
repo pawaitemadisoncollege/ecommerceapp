@@ -11,7 +11,7 @@ import {
 } from 'antd';
 
 import { API } from 'aws-amplify';
-import { withAuthenticator } from '@aws-amplify/ui-react'''
+import { withAuthenticator } from '@aws-amplify/ui-react';
 
 const initialState = {
   name: ''
